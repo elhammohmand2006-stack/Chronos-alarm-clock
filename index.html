@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chronos Alarm Clock</title>
+
+  <!-- Google Font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <!-- External CSS -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <main class="app">
+
+    <!-- LEFT: live clock -->
+    <section class="clock-card">
+      <!-- Analog clock: hands and ticks are controlled by JavaScript -->
+      <div class="analog" id="analog" aria-hidden="true">
+        <div class="hand hour" id="hourHand"></div>
+        <div class="hand minute" id="minuteHand"></div>
+        <div class="hand second" id="secondHand"></div>
+        <span class="center-dot"></span>
+      </div>
+
+      <h1 class="digital" id="digital">--:--:--</h1>
+      <p class="date" id="date"></p>
+      <p class="next-alarm" id="nextAlarm">No alarms set</p>
+    </section>
+
+    <!-- RIGHT: create and manage alarms -->
+    <section class="panel">
+      <h2>New alarm</h2>
+
+      <form class="alarm-form" id="alarmForm">
+        <select id="hourSelect" aria-label="Hour"></select>
+        <select id="minuteSelect" aria-label="Minute"></select>
+        <select id="periodSelect" aria-label="AM or PM">
+          <option value="AM">AM</option>
+          <option value="PM">PM</option>
+        </select>
+
+        <input type="text" id="labelInput" placeholder="Label (e.g. English class)" maxlength="30">
+        <button type="submit" class="btn primary">Add alarm</button>
+      </form>
+
+      <h2>Your alarms</h2>
+      <ul class="alarm-list" id="alarmList"></ul>
+    </section>
+
+  </main>
+
+  <!-- Ringing screen (hidden until an alarm rings) -->
+  <div class="ringing" id="ringing" hidden>
+    <div class="ringing-card">
+      <p class="ringing-time" id="ringingTime"></p>
+      <p class="ringing-label" id="ringingLabel"></p>
+      <div class="ringing-actions">
+        <button class="btn" id="snoozeBtn">Snooze 5 min</button>
+        <button class="btn primary" id="stopBtn">Stop</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- External JavaScript -->
+  <script src="script.js" defer></script>
+</body>
+</html>
