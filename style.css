@@ -1,0 +1,250 @@
+/* ===== 1. Variables (night theme is the default) ===== */
+:root {
+  --bg: #12141f;
+  --panel: #1b1f31;
+  --line: #2c3250;
+  --text: #ece8dc;
+  --muted: #9a9fb8;
+  --brass: #e0b04f;
+  --alert: #ff6b5a;
+  --radius: 20px;
+}
+
+/* JavaScript switches this theme during the day */
+[data-theme="day"] {
+  --bg: #f3efe6;
+  --panel: #fffdf7;
+  --line: #ddd5c2;
+  --text: #23233a;
+  --muted: #6b6b80;
+  --brass: #b9801c;
+}
+
+/* ===== 2. Base ===== */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Sora", system-ui, sans-serif;
+  transition: background 0.6s, color 0.6s;
+}
+
+h2 { font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; }
+
+/* ===== 3. Layout ===== */
+.app {
+  width: 100%;
+  max-width: 960px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.clock-card,
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 32px;
+  transition: background 0.6s, border-color 0.6s;
+}
+
+.clock-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+}
+
+/* ===== 4. Analog clock ===== */
+.analog {
+  position: relative;
+  width: clamp(200px, 60vw, 280px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 2px solid var(--brass);
+}
+
+/* Tick marks are created by JavaScript */
+.tick { position: absolute; inset: 0; }
+.tick::before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  width: 2px;
+  height: 10px;
+  margin-left: -1px;
+  background: var(--muted);
+}
+.tick.big::before { height: 16px; width: 3px; background: var(--brass); }
+
+/* All hands rotate from the bottom-center point */
+.hand {
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+  transform-origin: bottom center;
+  transform: translateX(-50%) rotate(0deg);
+  border-radius: 4px;
+}
+.hand.hour   { width: 6px; height: 28%; background: var(--text); }
+.hand.minute { width: 4px; height: 38%; background: var(--text); }
+.hand.second { width: 2px; height: 42%; background: var(--alert); }
+
+.center-dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  margin: -7px 0 0 -7px;
+  border-radius: 50%;
+  background: var(--brass);
+}
+
+/* ===== 5. Digital clock text ===== */
+.digital {
+  font-size: clamp(2rem, 8vw, 3rem);
+  font-weight: 300;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+.date, .next-alarm { color: var(--muted); font-size: 0.95rem; }
+.next-alarm { color: var(--brass); }
+
+/* ===== 6. Form ===== */
+.alarm-form {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 28px;
+}
+.alarm-form input[type="text"],
+.alarm-form button { grid-column: 1 / -1; }
+
+select,
+input[type="text"] {
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--text);
+  font: inherit;
+}
+
+/* Visible keyboard focus for accessibility */
+:focus-visible { outline: 2px solid var(--brass); outline-offset: 2px; }
+
+/* ===== 7. Buttons ===== */
+.btn {
+  padding: 12px 20px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+.btn:hover { transform: translateY(-2px); }
+.btn.primary { background: var(--brass); border-color: var(--brass); color: #12141f; }
+
+/* ===== 8. Alarm list ===== */
+.alarm-list { list-style: none; display: grid; gap: 10px; }
+
+.alarm-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.alarm-item.off { opacity: 0.5; }
+.alarm-info { flex: 1; min-width: 0; }
+.alarm-time { font-size: 1.3rem; font-weight: 600; }
+.alarm-label { color: var(--muted); font-size: 0.85rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.empty { color: var(--muted); font-size: 0.95rem; }
+
+.delete-btn {
+  border: none;
+  background: none;
+  color: var(--alert);
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+/* On/off switch built from a checkbox */
+.switch {
+  appearance: none;
+  position: relative;
+  width: 44px;
+  height: 24px;
+  border-radius: 99px;
+  background: var(--line);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.switch::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.2s;
+}
+.switch:checked { background: var(--brass); }
+.switch:checked::after { transform: translateX(20px); }
+
+/* ===== 9. Ringing screen ===== */
+.ringing {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(10, 10, 20, 0.88);
+  z-index: 10;
+}
+.ringing[hidden] { display: none; } /* needed because display:grid overrides [hidden] */
+
+.ringing-card {
+  width: 100%;
+  max-width: 380px;
+  padding: 40px 28px;
+  text-align: center;
+  border-radius: var(--radius);
+  background: var(--panel);
+  border: 2px solid var(--alert);
+  animation: pulse 1.2s infinite;
+}
+.ringing-time { font-size: 3rem; font-weight: 300; }
+.ringing-label { color: var(--muted); margin: 8px 0 28px; }
+.ringing-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+@keyframes pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(255, 107, 90, 0.6); }
+  100% { box-shadow: 0 0 0 28px rgba(255, 107, 90, 0); }
+}
+
+/* ===== 10. Responsive ===== */
+@media (max-width: 760px) {
+  .app { grid-template-columns: 1fr; }
+  .clock-card, .panel { padding: 24px; }
+}
+
+/* Respect users who prefer less motion */
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
